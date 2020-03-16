@@ -72,8 +72,10 @@ public final class Bootstrap {
         if (home != null) {
             File f = new File(home);
             try {
+                //返回此抽象路径名的规范路径名字符串。规范路径名是绝对路径名，并且是惟一的
                 homeFile = f.getCanonicalFile();
             } catch (IOException ioe) {
+                //返回此抽象路径名的绝对路径名字符串。
                 homeFile = f.getAbsoluteFile();
             }
         }

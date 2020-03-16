@@ -4860,6 +4860,11 @@ public class StandardContext extends ContainerBase
      *  servlets (including those not declared load on startup)
      * @return <code>true</code> if load on startup was considered successful
      */
+
+    /**
+     * web.xml或者@EnableWebMvc
+     * Collect "load on startup" servlets that need to be initialized
+     */
     public boolean loadOnStartup(Container children[]) {
 
         // Collect "load on startup" servlets that need to be initialized
@@ -4867,6 +4872,7 @@ public class StandardContext extends ContainerBase
         for (int i = 0; i < children.length; i++) {
             Wrapper wrapper = (Wrapper) children[i];
             int loadOnStartup = wrapper.getLoadOnStartup();
+            //在web.xml 配置 <load-on-startup>1</load-on-startup>
             if (loadOnStartup < 0)
                 continue;
             Integer key = Integer.valueOf(loadOnStartup);
@@ -4882,6 +4888,7 @@ public class StandardContext extends ContainerBase
         for (ArrayList<Wrapper> list : map.values()) {
             for (Wrapper wrapper : list) {
                 try {
+//                    StandardWrapper.load()
                     wrapper.load();
                 } catch (ServletException e) {
                     getLogger().error(sm.getString("standardContext.loadOnStartup.loadException",

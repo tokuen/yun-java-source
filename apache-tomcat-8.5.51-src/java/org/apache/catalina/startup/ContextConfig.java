@@ -758,6 +758,7 @@ public class ContextConfig implements LifecycleListener {
 
 
     /**
+     * 配置启动
      * Process a "contextConfig" event for this Context.
      */
     protected synchronized void configureStart() {
@@ -774,6 +775,7 @@ public class ContextConfig implements LifecycleListener {
                     Boolean.valueOf(context.getXmlNamespaceAware())));
         }
 
+        // 解析xml
         webConfig();
 
         //原因是我们直接启动org.apache.catalina.startup.Bootstrap的时候没有加载org.apache.jasper.servlet.JasperInitializer，
@@ -1112,7 +1114,7 @@ public class ContextConfig implements LifecycleListener {
 
         Set<WebXml> defaults = new HashSet<>();
         defaults.add(getDefaultWebXmlFragment(webXmlParser));
-
+        //web.xml
         WebXml webXml = createWebXml();
 
         // Parse context level web.xml
@@ -1334,6 +1336,7 @@ public class ContextConfig implements LifecycleListener {
         for (ContextService service : webxml.getServiceRefs().values()) {
             context.getNamingResources().addService(service);
         }
+        //servlet
         for (ServletDef servlet : webxml.getServlets().values()) {
             Wrapper wrapper = context.createWrapper();
             // Description is ignored

@@ -64,7 +64,7 @@
              APR (HTTP/AJP) Connector: /docs/apr.html
              Define a non-SSL/TLS HTTP/1.1 Connector on port 8080
         -->
-        <!-- 连接器 -->
+        <!-- 连接器  监听端口，转发容器,解析请求，io操作，封装对象，返回结果到客户端-->
         <Connector port="8080" protocol="HTTP/1.1"
                    connectionTimeout="20000"
                    redirectPort="8443"
@@ -130,6 +130,7 @@
         <!-- You should set jvmRoute to support load-balancing via AJP ie :
         <Engine name="Catalina" defaultHost="localhost" jvmRoute="jvm1">
         -->
+        <!-- 顶层容器 -->
         <Engine name="Catalina" defaultHost="localhost">
 
             <!--For clustering, please take a look at documentation at:
@@ -150,6 +151,7 @@
                        resourceName="UserDatabase"/>
             </Realm>
 
+            <!-- 虚拟主机 -->
             <Host name="localhost" appBase="webapps"
                   unpackWARs="true" autoDeploy="true">
 
@@ -165,6 +167,10 @@
                 <Valve className="org.apache.catalina.valves.AccessLogValve" directory="logs"
                        prefix="localhost_access_log" suffix=".txt"
                        pattern="%h %l %u %t &quot;%r&quot; %s %b"/>
+
+                <!-- 应用 -->
+                <!--<Context docBase="D:\MVC" path="/" reloadable="true"/>-->
+                <!-- wrapper 一个wrapper对应一个servlet -->
 
             </Host>
         </Engine>
