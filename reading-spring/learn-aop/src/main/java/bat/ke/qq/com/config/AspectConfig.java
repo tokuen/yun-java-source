@@ -1,6 +1,5 @@
 package bat.ke.qq.com.config;
 
-import com.sun.corba.se.impl.ior.OldJIDLObjectKeyTemplate;
 import org.aspectj.lang.JoinPoint;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.*;

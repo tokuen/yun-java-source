@@ -51,6 +51,9 @@ package org.springframework.core.env;
  * @see SystemEnvironmentPropertySource
  * @see org.springframework.web.context.support.StandardServletEnvironment
  */
+//他是一个Environment的一个实现，适用于非WEB的应用
+//除了ConfigurableEnvironment通用的属性解析和profile相关的操作外，StandardEnvironment还提供了
+//system properties 和 system environment variables 两个属性
 public class StandardEnvironment extends AbstractEnvironment {
 
 	/** System environment property source name: {@value}. */
@@ -75,7 +78,9 @@ public class StandardEnvironment extends AbstractEnvironment {
 	 */
 	@Override
 	protected void customizePropertySources(MutablePropertySources propertySources) {
+		//系统配置 例如os.name = windows 10
 		propertySources.addLast(new MapPropertySource(SYSTEM_PROPERTIES_PROPERTY_SOURCE_NAME, getSystemProperties()));
+		//系统环境变量 例如javahome
 		propertySources.addLast(new SystemEnvironmentPropertySource(SYSTEM_ENVIRONMENT_PROPERTY_SOURCE_NAME, getSystemEnvironment()));
 	}
 

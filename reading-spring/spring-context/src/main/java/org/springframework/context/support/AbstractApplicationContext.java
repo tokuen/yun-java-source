@@ -311,9 +311,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * <p>If none specified, a default environment will be initialized via
 	 * {@link #createEnvironment()}.
 	 */
+	/**
+	 * AnnotationConfigApplicationContext 子类会使用这个类的getEnvironment方法
+	 * @return
+	 */
 	@Override
 	public ConfigurableEnvironment getEnvironment() {
 		if (this.environment == null) {
+			//创建环境对象 AnnotatedBeanDefinitionReader.getOrCreateEnvironment方法在调用
 			this.environment = createEnvironment();
 		}
 		return this.environment;
@@ -325,6 +330,8 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * a custom {@link ConfigurableEnvironment} implementation.
 	 */
 	protected ConfigurableEnvironment createEnvironment() {
+		//会调用AbstractEnvironment的构造方法，构造方法会执行子类的customizePropertySources(this.propertySources);
+		//对private final MutablePropertySources propertySources = new MutablePropertySources();进行添加环境配置
 		return new StandardEnvironment();
 	}
 

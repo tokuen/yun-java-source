@@ -91,6 +91,12 @@ import org.springframework.util.Assert;
  * @see org.springframework.beans.factory.xml.XmlBeanDefinitionReader
  * @see org.springframework.beans.factory.support.PropertiesBeanDefinitionReader
  */
+
+/**
+ *
+ * spring加载的bean都会放到这里面去
+ * 一般实例化出来的是子类AnnotationConfigApplicationContext
+ */
 public class GenericApplicationContext extends AbstractApplicationContext implements BeanDefinitionRegistry {
 
 	private final DefaultListableBeanFactory beanFactory;
@@ -319,7 +325,8 @@ public class GenericApplicationContext extends AbstractApplicationContext implem
 	@Override
 	public void registerBeanDefinition(String beanName, BeanDefinition beanDefinition)
 			throws BeanDefinitionStoreException {
-
+		//this.beanFactory.
+		// 一开始就初始化了DefaultListableBeanFactory 构造方法
 		this.beanFactory.registerBeanDefinition(beanName, beanDefinition);
 	}
 

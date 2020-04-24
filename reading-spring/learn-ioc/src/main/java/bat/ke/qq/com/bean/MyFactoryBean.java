@@ -5,9 +5,9 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 //@Component
-public class MyFactoryBean implements FactoryBean {
+public class MyFactoryBean implements FactoryBean<User> {
 	@Override
-	public Object getObject() throws Exception {
+	public User getObject() throws Exception {
 		return new User();
 	}
 

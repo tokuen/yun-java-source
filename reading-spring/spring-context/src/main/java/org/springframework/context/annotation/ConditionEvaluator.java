@@ -45,6 +45,11 @@ import org.springframework.util.MultiValueMap;
  * @author Juergen Hoeller
  * @since 4.0
  */
+
+/**
+ *
+ * 使用ConditionEvaluator这个内部类完成条件注解的解析和判断
+ */
 class ConditionEvaluator {
 
 	private final ConditionContextImpl context;
@@ -55,7 +60,7 @@ class ConditionEvaluator {
 	 */
 	public ConditionEvaluator(@Nullable BeanDefinitionRegistry registry,
 			@Nullable Environment environment, @Nullable ResourceLoader resourceLoader) {
-
+		//系统的信息包括 环境变量/系统信息
 		this.context = new ConditionContextImpl(registry, environment, resourceLoader);
 	}
 
