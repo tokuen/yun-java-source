@@ -15,7 +15,7 @@ public class AopTest {
 	public void test(){
 		ApplicationContext context = new AnnotationConfigApplicationContext(AppConfig.class);
 
-		IFoxDao dao = (IFoxDao) context.getBean(FoxDao.class);
+		IFoxDao dao = context.getBean(FoxDao.class);
 		dao.query();
 		dao.query("fox");
 		dao.query(new Fox());
