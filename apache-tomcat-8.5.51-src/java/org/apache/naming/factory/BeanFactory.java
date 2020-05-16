@@ -88,6 +88,10 @@ import org.apache.naming.ResourceRef;
  *
  * @author Aner Perez [aner at ncstech.com]
  */
+
+/**
+ * 工厂模式
+ */
 public class BeanFactory
     implements ObjectFactory {
 

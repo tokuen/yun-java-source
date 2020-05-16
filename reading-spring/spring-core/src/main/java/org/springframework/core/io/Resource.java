@@ -49,6 +49,11 @@ import org.springframework.lang.Nullable;
  * @see ByteArrayResource
  * @see InputStreamResource
  */
+
+/**
+ * 策略模式
+ * 实现的接口采用不同的策略进行处理
+ */
 public interface Resource extends InputStreamSource {
 
 	/**

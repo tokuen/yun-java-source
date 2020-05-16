@@ -33,6 +33,11 @@ import org.springframework.lang.Nullable;
  * @author Juergen Hoeller
  * @since 1.1
  */
+
+/**
+ * 策略模式
+ * 两种初始化策略 cglib 动态代理
+ */
 public interface InstantiationStrategy {
 
 	/**

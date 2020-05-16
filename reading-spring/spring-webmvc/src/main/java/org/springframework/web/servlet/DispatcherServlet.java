@@ -158,6 +158,10 @@ import org.springframework.web.util.WebUtils;
  * @see org.springframework.web.servlet.mvc.Controller
  * @see org.springframework.web.context.ContextLoaderListener
  */
+
+/**
+ * 典型的委派模式springmvc
+ */
 @SuppressWarnings("serial")
 public class DispatcherServlet extends FrameworkServlet {
 

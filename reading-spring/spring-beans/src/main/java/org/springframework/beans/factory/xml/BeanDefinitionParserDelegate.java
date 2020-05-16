@@ -82,6 +82,11 @@ import org.springframework.util.xml.DomUtils;
  * @see ParserContext
  * @see DefaultBeanDefinitionDocumentReader
  */
+
+/**
+ * 委派模式以Delegate结尾或者dispatcher开头的
+ * 	委派具体哪种解析方式获取bean
+ */
 public class BeanDefinitionParserDelegate {
 
 	public static final String BEANS_NAMESPACE_URI = "http://www.springframework.org/schema/beans";
