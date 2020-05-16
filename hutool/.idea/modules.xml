@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/hutool-all/hutool-all.iml" filepath="$PROJECT_DIR$/hutool-all/hutool-all.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-aop/hutool-aop.iml" filepath="$PROJECT_DIR$/hutool-aop/hutool-aop.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-bloomFilter/hutool-bloomFilter.iml" filepath="$PROJECT_DIR$/hutool-bloomFilter/hutool-bloomFilter.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-bom/hutool-bom.iml" filepath="$PROJECT_DIR$/hutool-bom/hutool-bom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-cache/hutool-cache.iml" filepath="$PROJECT_DIR$/hutool-cache/hutool-cache.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-captcha/hutool-captcha.iml" filepath="$PROJECT_DIR$/hutool-captcha/hutool-captcha.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-core/hutool-core.iml" filepath="$PROJECT_DIR$/hutool-core/hutool-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-cron/hutool-cron.iml" filepath="$PROJECT_DIR$/hutool-cron/hutool-cron.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-crypto/hutool-crypto.iml" filepath="$PROJECT_DIR$/hutool-crypto/hutool-crypto.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-db/hutool-db.iml" filepath="$PROJECT_DIR$/hutool-db/hutool-db.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-dfa/hutool-dfa.iml" filepath="$PROJECT_DIR$/hutool-dfa/hutool-dfa.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-extra/hutool-extra.iml" filepath="$PROJECT_DIR$/hutool-extra/hutool-extra.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-http/hutool-http.iml" filepath="$PROJECT_DIR$/hutool-http/hutool-http.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-json/hutool-json.iml" filepath="$PROJECT_DIR$/hutool-json/hutool-json.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-log/hutool-log.iml" filepath="$PROJECT_DIR$/hutool-log/hutool-log.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-parent.iml" filepath="$PROJECT_DIR$/hutool-parent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-poi/hutool-poi.iml" filepath="$PROJECT_DIR$/hutool-poi/hutool-poi.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-script/hutool-script.iml" filepath="$PROJECT_DIR$/hutool-script/hutool-script.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-setting/hutool-setting.iml" filepath="$PROJECT_DIR$/hutool-setting/hutool-setting.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-socket/hutool-socket.iml" filepath="$PROJECT_DIR$/hutool-socket/hutool-socket.iml" />
+      <module fileurl="file://$PROJECT_DIR$/hutool-system/hutool-system.iml" filepath="$PROJECT_DIR$/hutool-system/hutool-system.iml" />
+    </modules>
+  </component>
+</project>

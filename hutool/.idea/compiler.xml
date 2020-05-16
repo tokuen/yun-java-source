@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="hutool-cache" />
+        <module name="hutool-system" />
+        <module name="hutool-json" />
+        <module name="hutool-poi" />
+        <module name="hutool-db" />
+        <module name="hutool-cron" />
+        <module name="hutool-http" />
+        <module name="hutool-crypto" />
+        <module name="hutool-extra" />
+        <module name="hutool-log" />
+        <module name="hutool-socket" />
+        <module name="hutool-script" />
+        <module name="hutool-all" />
+        <module name="hutool-core" />
+        <module name="hutool-captcha" />
+        <module name="hutool-bloomFilter" />
+        <module name="hutool-setting" />
+        <module name="hutool-aop" />
+        <module name="hutool-dfa" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="hutool-all" target="8" />
+      <module name="hutool-aop" target="8" />
+      <module name="hutool-bloomFilter" target="8" />
+      <module name="hutool-bom" target="8" />
+      <module name="hutool-cache" target="8" />
+      <module name="hutool-captcha" target="8" />
+      <module name="hutool-core" target="8" />
+      <module name="hutool-cron" target="8" />
+      <module name="hutool-crypto" target="8" />
+      <module name="hutool-db" target="8" />
+      <module name="hutool-dfa" target="8" />
+      <module name="hutool-extra" target="8" />
+      <module name="hutool-http" target="8" />
+      <module name="hutool-json" target="8" />
+      <module name="hutool-log" target="8" />
+      <module name="hutool-parent" target="8" />
+      <module name="hutool-poi" target="8" />
+      <module name="hutool-script" target="8" />
+      <module name="hutool-setting" target="8" />
+      <module name="hutool-socket" target="8" />
+      <module name="hutool-system" target="8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

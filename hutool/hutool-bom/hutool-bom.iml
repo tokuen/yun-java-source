@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module org.jetbrains.idea.maven.project.MavenProjectsManager.isMavenModule="true" type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" LANGUAGE_LEVEL="JDK_1_8">
+    <output url="file://$MODULE_DIR$/target/classes" />
+    <output-test url="file://$MODULE_DIR$/target/test-classes" />
+    <content url="file://$MODULE_DIR$">
+      <excludeFolder url="file://$MODULE_DIR$/target" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="module" module-name="hutool-core" />
+    <orderEntry type="module" module-name="hutool-aop" />
+    <orderEntry type="module" module-name="hutool-bloomFilter" />
+    <orderEntry type="module" module-name="hutool-cache" />
+    <orderEntry type="module" module-name="hutool-crypto" />
+    <orderEntry type="module" module-name="hutool-db" />
+    <orderEntry type="module" module-name="hutool-dfa" />
+    <orderEntry type="module" module-name="hutool-extra" />
+    <orderEntry type="module" module-name="hutool-http" />
+    <orderEntry type="module" module-name="hutool-log" />
+    <orderEntry type="module" module-name="hutool-script" />
+    <orderEntry type="module" module-name="hutool-setting" />
+    <orderEntry type="module" module-name="hutool-system" />
+    <orderEntry type="module" module-name="hutool-cron" />
+    <orderEntry type="module" module-name="hutool-json" />
+    <orderEntry type="module" module-name="hutool-poi" />
+    <orderEntry type="module" module-name="hutool-captcha" />
+    <orderEntry type="module" module-name="hutool-socket" />
+    <orderEntry type="library" scope="TEST" name="Maven: junit:junit:4.13" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.hamcrest:hamcrest-core:1.3" level="project" />
+    <orderEntry type="library" scope="TEST" name="Maven: org.projectlombok:lombok:1.18.12" level="project" />
+  </component>
+</module>
