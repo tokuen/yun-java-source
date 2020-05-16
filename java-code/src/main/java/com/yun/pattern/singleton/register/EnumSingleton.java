@@ -19,6 +19,10 @@ public enum EnumSingleton {
         this.obj = obj;
     }
 
+    /**
+     * EnumSingleton o1 = EnumSingleton.getInstance();
+     * o1.setObj(new Object());
+     */
     public static EnumSingleton getInstance(){
         return INSTANCE;
     }

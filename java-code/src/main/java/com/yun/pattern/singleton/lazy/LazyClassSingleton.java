@@ -15,7 +15,7 @@ public class LazyClassSingleton implements Serializable {
         }
     }
 
-    public LazyClassSingleton getInstance(){
+    public static LazyClassSingleton getInstance(){
         return InnerClass.SingletonInstance;
     }
 
