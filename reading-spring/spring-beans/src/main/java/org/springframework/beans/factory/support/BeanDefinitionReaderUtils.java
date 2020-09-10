@@ -164,13 +164,18 @@ public abstract class BeanDefinitionReaderUtils {
 		// Register bean definition under primary name.
 		// 根据beanName注册 (包括 id  name)
 		String beanName = definitionHolder.getBeanName();
-		// 注册beanDefiniton
+		//通过1.beanName做唯一标识注册  DefaultListableBeanFactory类的实现
 		registry.registerBeanDefinition(beanName, definitionHolder.getBeanDefinition());
 
 		// Register aliases for bean name, if any.
 		String[] aliases = definitionHolder.getAliases();
 		if (aliases != null) {
 			for (String alias : aliases) {
+				//2.通别名进行注册 String[] aliases = definitionHolder.getAliases();
+				//alisa与beanName相同情况处理，若alias与beanName并名称相同则不需要处理并删除原有的alias
+				//alias覆盖处理，若aliasName已经使用并已经指向了另一个beanName则需要用户的设置处理
+				//alias循环检查。当a->b存在时，若再次出现a->c->b时候会抛出异常
+				//注册alias
 				registry.registerAlias(beanName, alias);
 			}
 		}

@@ -192,12 +192,13 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 	 * @param parentBeanFactory the parent BeanFactory
 	 */
 	public DefaultListableBeanFactory(@Nullable BeanFactory parentBeanFactory) {
+		//调用父类AbstractAutthis.reader.loadBeanDefinitionsowireCapableBeanFactory的入参是BeanFactory的构造方法
 		super(parentBeanFactory);
 	}
 
 
 	/**
-	 * Specify an id for serialization purposes, allowing this BeanFactory to be
+	 * Specify an id for serializationew ClassPathResource(n purposes, allowing this BeanFactory to be
 	 * deserialized from this id back into the BeanFactory object, if needed.
 	 */
 	public void setSerializationId(@Nullable String serializationId) {
@@ -883,6 +884,9 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 
 		if (beanDefinition instanceof AbstractBeanDefinition) {
 			try {
+				//注册前的最后一次验证，这里的验证不同于xml文件验证
+				//主要是对于AbstractBeanFinition属性中的methodOverrides校验
+				//校验methodOverrides是否于工厂方法并称或者methodOverrides对应的方法根本不存在
 				((AbstractBeanDefinition) beanDefinition).validate();
 			}
 			catch (BeanDefinitionValidationException ex) {
@@ -891,9 +895,10 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 			}
 		}
 
-		//首先从缓存中获取
+		//首先从缓存中获取 获得已经注册过的bean 主要是判断新的bean是否已经被注册过
 		BeanDefinition existingDefinition = this.beanDefinitionMap.get(beanName);
 		if (existingDefinition != null) {
+			//判断对应的beanName已经注册且配置中配置了bean不允许覆盖，则抛出异常
 			if (!isAllowBeanDefinitionOverriding()) {
 				throw new BeanDefinitionOverrideException(beanName, beanDefinition, existingDefinition);
 			}
@@ -925,14 +930,17 @@ public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFacto
 		else {
 			if (hasBeanCreationStarted()) {
 				// Cannot modify startup-time collection elements anymore (for stable iteration)
+				//因为是全局变量可能有并发现象
 				synchronized (this.beanDefinitionMap) {
 					this.beanDefinitionMap.put(beanName, beanDefinition);
 					List<String> updatedDefinitions = new ArrayList<>(this.beanDefinitionNames.size() + 1);
 					updatedDefinitions.addAll(this.beanDefinitionNames);
 					updatedDefinitions.add(beanName);
+					//将要注册bean加入beanDefinitionNames中updatedDefinitions.addAll(this.beanDefinitionNames)+updatedDefinitions.add(beanName);
 					this.beanDefinitionNames = updatedDefinitions;
 					if (this.manualSingletonNames.contains(beanName)) {
 						Set<String> updatedSingletons = new LinkedHashSet<>(this.manualSingletonNames);
+						//清除缓存
 						updatedSingletons.remove(beanName);
 						this.manualSingletonNames = updatedSingletons;
 					}

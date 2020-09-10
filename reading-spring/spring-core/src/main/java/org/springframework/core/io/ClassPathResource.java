@@ -62,6 +62,8 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	 * @see java.lang.ClassLoader#getResourceAsStream(String)
 	 * @see org.springframework.util.ClassUtils#getDefaultClassLoader()
 	 */
+
+	//用入参为Sting的构造函数
 	public ClassPathResource(String path) {
 		this(path, (ClassLoader) null);
 	}
@@ -75,6 +77,7 @@ public class ClassPathResource extends AbstractFileResolvingResource {
 	 * or {@code null} for the thread context class loader
 	 * @see ClassLoader#getResourceAsStream(String)
 	 */
+	//实际调用入参是path和ClassLoader的构造函数 作用生成Resource
 	public ClassPathResource(String path, @Nullable ClassLoader classLoader) {
 		Assert.notNull(path, "Path must not be null");
 		String pathToUse = StringUtils.cleanPath(path);

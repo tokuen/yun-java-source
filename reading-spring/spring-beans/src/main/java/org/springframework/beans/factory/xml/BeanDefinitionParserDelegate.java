@@ -407,6 +407,7 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele) {
+		//解析id属性，解析name属性，分割name属性，如果不存在beanName那么根据spring中提供的命名规则为当前bean生成对应的beanname
 		return parseBeanDefinitionElement(ele, null);
 	}
 
@@ -417,7 +418,9 @@ public class BeanDefinitionParserDelegate {
 	 */
 	@Nullable
 	public BeanDefinitionHolder parseBeanDefinitionElement(Element ele, @Nullable BeanDefinition containingBean) {
+		//(1)提前运算的id以及name属性
 		String id = ele.getAttribute(ID_ATTRIBUTE);
+		//别名 nameAttr转List<String> aliases = new ArrayList<>();-->aliases.add(beanClassName);-->String[] aliasesArray = StringUtils.toStringArray(aliases);
 		String nameAttr = ele.getAttribute(NAME_ATTRIBUTE);
 
 		List<String> aliases = new ArrayList<>();
@@ -440,11 +443,13 @@ public class BeanDefinitionParserDelegate {
 			checkNameUniqueness(beanName, aliases, ele);
 		}
 
+		//(2)进一步解析其他所有属性并统一封装至GenericBeanDefinition类型的实例中
 		AbstractBeanDefinition beanDefinition = parseBeanDefinitionElement(ele, beanName, containingBean);
 		if (beanDefinition != null) {
 			if (!StringUtils.hasText(beanName)) {
 				try {
 					if (containingBean != null) {
+						//(3)如果检测到bean没有指定beanName,那么使用默认规则为此Bean生成beanName
 						beanName = BeanDefinitionReaderUtils.generateBeanName(
 								beanDefinition, this.readerContext.getRegistry(), true);
 					}
@@ -471,6 +476,7 @@ public class BeanDefinitionParserDelegate {
 				}
 			}
 			String[] aliasesArray = StringUtils.toStringArray(aliases);
+			//(4)将获取到的信息封装到BeanDefinitionHolder的实例中
 			return new BeanDefinitionHolder(beanDefinition, beanName, aliasesArray);
 		}
 
@@ -510,25 +516,35 @@ public class BeanDefinitionParserDelegate {
 
 		String className = null;
 		if (ele.hasAttribute(CLASS_ATTRIBUTE)) {
+			//解析class属性
 			className = ele.getAttribute(CLASS_ATTRIBUTE).trim();
 		}
 		String parent = null;
 		if (ele.hasAttribute(PARENT_ATTRIBUTE)) {
+			//解析parent属性
 			parent = ele.getAttribute(PARENT_ATTRIBUTE);
 		}
 
 		try {
+			//创建用于承载属性的AbstractBeanDefinition类型的GenericBeanDefinition，代码是创建GenericBeanDefinition设置setBeanClass，setBeanClassName
 			AbstractBeanDefinition bd = createBeanDefinition(className, parent);
-
+			//硬编码1解析默认bean的各种属性，主要是解析scope，singlegton，在嵌入beanDifinnition情况下且没有单独指用scope属性则使用父类默认属性，abstract属性，
+			//解析lazy-init，autowire，depency-check,depends-on,autowire-candidate,primary,init-method,destoy-method,factory-method,factory-bean属性
 			parseBeanDefinitionAttributes(ele, beanName, containingBean, bd);
+			//提取description
 			bd.setDescription(DomUtils.getChildElementValueByTagName(ele, DESCRIPTION_ELEMENT));
-
+			//解析元数据 <meta key="testStr" value="aaaaa">
 			parseMetaElements(ele, bd);
+			//解析lookup-method属性 <lookup-method name="getBean" bean="teacher"> 动态的将teacher所代表的bean作为getBean的返回值
 			parseLookupOverrideSubElements(ele, bd.getMethodOverrides());
+			//解析replaced-method属性 动态替换原来的方法
 			parseReplacedMethodSubElements(ele, bd.getMethodOverrides());
-
+			//解析构造函数参数 如果指定了index属性和没有指定index属性 解析constructor-arg，封装，将type，name，index一同封装到ConstructorArgumentValues.ValueHolder
+			//类型中并添加到当前BeanDefinition的constructorArgumenValues的indexedArgumenValues中。（当指定indexs时）
 			parseConstructorArgElements(ele, bd);
+			//解析property子元素 对<prooerty name="testStr" value="aaa">提取
 			parsePropertyElements(ele, bd);
+			//解析qualifier子元素 <qualifier type="org.spring.Qualifier" value="qf">通过这个指定注入的Bean的名称，消除歧义。spring容器中匹配的Bean的数量只有一个
 			parseQualifierElements(ele, bd);
 
 			bd.setResource(this.readerContext.getResource());
@@ -1373,6 +1389,7 @@ public class BeanDefinitionParserDelegate {
 	}
 
 	public BeanDefinitionHolder decorateBeanDefinitionIfRequired(Element ele, BeanDefinitionHolder definitionHolder) {
+		//首先获取属性或者元素的命名空间，判断该元素是否适用于自定义标签的解析条件，找出自定义类型所对应的namespacehandler并进一步解析。待具体分析
 		return decorateBeanDefinitionIfRequired(ele, definitionHolder, null);
 	}
 

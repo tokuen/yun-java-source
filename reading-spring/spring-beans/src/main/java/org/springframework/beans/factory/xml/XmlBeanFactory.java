@@ -63,6 +63,7 @@ public class XmlBeanFactory extends DefaultListableBeanFactory {
 	 * @param resource the XML resource to load bean definitions from
 	 * @throws BeansException in case of loading or parsing errors
 	 */
+	//调用入参为Resource的构造方法 BeanFactory bf = new XmlBeanFactory(new ClassPathResource("BeanFactoryTest.xml"));
 	public XmlBeanFactory(Resource resource) throws BeansException {
 		this(resource, null);
 	}
@@ -74,8 +75,11 @@ public class XmlBeanFactory extends DefaultListableBeanFactory {
 	 * @param parentBeanFactory parent bean factory
 	 * @throws BeansException in case of loading or parsing errors
 	 */
+	//实际调用入参是Resource和BeanFactory（BeanFactory为空）
 	public XmlBeanFactory(Resource resource, BeanFactory parentBeanFactory) throws BeansException {
+		//调用父类DefaultListableBeanFactory的入参是BeanFactory的构造方法
 		super(parentBeanFactory);
+		//调用XmlBeanDefinitionReader的loadBeanDefinitions方法 返回值为int？
 		this.reader.loadBeanDefinitions(resource);
 	}
 

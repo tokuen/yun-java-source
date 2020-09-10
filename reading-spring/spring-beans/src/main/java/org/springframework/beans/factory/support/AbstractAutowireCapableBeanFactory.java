@@ -171,7 +171,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * Create a new AbstractAutowireCapableBeanFactory.
 	 */
 	public AbstractAutowireCapableBeanFactory() {
+		//调用AbstractBeanFactory的空参构造函数，会初始化很多属性parentBeanFactory，beanClassLoader，scopes
 		super();
+		//自动装配时忽略给定的依赖接口
 		ignoreDependencyInterface(BeanNameAware.class);
 		ignoreDependencyInterface(BeanFactoryAware.class);
 		ignoreDependencyInterface(BeanClassLoaderAware.class);
@@ -182,7 +184,9 @@ public abstract class AbstractAutowireCapableBeanFactory extends AbstractBeanFac
 	 * @param parentBeanFactory parent bean factory, or {@code null} if none
 	 */
 	public AbstractAutowireCapableBeanFactory(@Nullable BeanFactory parentBeanFactory) {
+		//AbstractAutowireCapableBeanFactory()
 		this();
+		// 设置parentBeanFactory的值
 		setParentBeanFactory(parentBeanFactory);
 	}
 
