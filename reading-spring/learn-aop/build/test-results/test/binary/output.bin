@@ -1,17 +1,0 @@
-around
-before
-===query==
-after
-afterReturning
-around
-====args:fox
-before
- ===query(String name)==foxxxxx
-after
-afterReturning
-around
-)====args:bat.ke.qq.com.bean.Fox@dda6e14
-before
-6===query(FoxDao dao)==bat.ke.qq.com.bean.Fox@dda6e14
-after
-afterReturning
