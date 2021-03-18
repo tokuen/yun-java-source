@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.annotation.Resource;
 import javax.servlet.ServletConfig;
@@ -14,13 +15,26 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.net.URL;
 import java.util.*;
 
 /**
  * 自定义MVC流程
+ * 模板模式 init方法
+ * 策略模式 handlerMapping
+ * 单例模式
+ * 工厂模式
+ * 代理模式
+ * 原型模式
+ * 适配器模式
+ * 委派模式
+ * 享元模式
+ * 观察者模式
+ * 装饰者模式
  */
 public class MyDispatchServlet extends HttpServlet {
 
@@ -33,7 +47,8 @@ public class MyDispatchServlet extends HttpServlet {
 	//实例化的bean
 	private Map<String, Object> ioc = new HashMap<>();
 
-	private Map<String, Method> handlerMapping = new HashMap<>();
+//	private Map<String, Method> handlerMapping = new HashMap<>();
+	private List<HandleMapping> handlerMapping = new ArrayList<HandleMapping>();
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -214,14 +229,96 @@ public class MyDispatchServlet extends HttpServlet {
 		}
 	}
 
-	private void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws Exception{
+	private void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		String requestURI = req.getRequestURI();
-		if(handlerMapping.containsKey(requestURI)){
+		if (handlerMapping.containsKey(requestURI)) {
 			resp.getWriter().write("404");
 			return;
 		}
 		Method method = handlerMapping.get(requestURI);
 		String beanName = toLowerFirstCase(method.getDeclaringClass().getSimpleName());
-		method.invoke(ioc.get(method.getDeclaringClass().getSimpleName()),new Object[]{req,resp,req.getParameter("name")});
+		//方法的形参列表
+		Parameter[] parameters = method.getParameters();
+		Object[] o = new Object[parameters.length];
+		//请求的参数列表
+		Map<String, String[]> reqParameterMap = req.getParameterMap();
+		//使用for循环可以使o对象的顺序得到保证
+		for (int i = 0; i < parameters.length; i++) {
+			if (parameters[i].getType() == HttpServletRequest.class) {
+				o[i] = req;
+				continue;
+			}else if(parameters[i].getType() == HttpServletResponse.class) {
+				o[i] = resp;
+				continue;
+			}else {
+				//http传输过来都是string类型的
+				//parameters[i].getAnnotation(RequestParam.class).value()获取不到参数的注解值
+				//因为参数可能有多个注解所以是二维的
+				Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+				for (int j = 0; j < parameterAnnotations.length; j++) {
+					for (Annotation annotation:parameterAnnotations[j]){
+						if(annotation instanceof RequestParam){
+							RequestParam requestParam = (RequestParam) annotation;
+							if(reqParameterMap.containsKey(requestParam.value())) {
+								//因为req.getParameterMap()是一个String, String[]是String[]因为http支持name=1&name=2的请求方式
+								String value = Arrays.toString(reqParameterMap.get(requestParam.value())).
+										replaceAll("\\[|\\]", "").
+										replaceAll("\\s",",");
+								Object convert = convert(parameters[i].getType(), value);
+								o[i] = convert;
+							}
+						}
+					}
+				}
+			}
+		}
+		method.invoke(ioc.get(beanName), o);
+	}
+
+	private Object convert(Class<?> type,String value){
+		if(String.class == type){
+			return value;
+		}
+		if(Integer.class == type){
+			return Integer.valueOf(value);
+		}
+		return value;
+	}
+	class HandleMapping{
+		private String url;
+		private Method method;
+		private Object controller;
+		//形参列表 参数名称 参数位置index
+		private Map<String,Integer> paramIndexMapping;
+
+		public HandleMapping(String url, Method method, Object controller) {
+			this.url = url;
+			this.method = method;
+			this.controller = controller;
+			paramIndexMapping = new HashMap<>();
+			putParamIndexMapping(method);
+		}
+
+		private void putParamIndexMapping(Method method) {
+			Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+			for (int j = 0; j < parameterAnnotations.length; j++) {
+				for (Annotation annotation:parameterAnnotations[j]){
+					if(annotation instanceof RequestParam){
+						String paramName = ((RequestParam) annotation).value();
+						if(!"".equals(paramName.trim())){
+							paramIndexMapping.put(paramName,j);
+						}
+					}
+				}
+			}
+			Class<?>[] parameterTypes = method.getParameterTypes();
+			for (int i = 0; i < parameterTypes.length; i++) {
+				Class<?> parameterType = parameterTypes[i];
+				if(parameterType == HttpServletRequest.class || parameterType == HttpServletResponse.class){
+					paramIndexMapping.put(parameterType.getName(),i);
+				}
+			}
+		}
 	}
 }
+
