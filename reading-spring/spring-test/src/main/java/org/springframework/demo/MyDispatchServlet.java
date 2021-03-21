@@ -35,6 +35,11 @@ import java.util.*;
  * 享元模式
  * 观察者模式
  * 装饰者模式
+ *
+ * spring的bean是否安全取决于自己的代码
+ * spring的bean什么时候被回收
+ * 	bean的生命周期
+ * 		singleton(spring容器的周期)，prototype,session,request
  */
 public class MyDispatchServlet extends HttpServlet {
 
@@ -47,8 +52,9 @@ public class MyDispatchServlet extends HttpServlet {
 	//实例化的bean
 	private Map<String, Object> ioc = new HashMap<>();
 
-//	private Map<String, Method> handlerMapping = new HashMap<>();
-	private List<HandleMapping> handlerMapping = new ArrayList<HandleMapping>();
+	//	private Map<String, Method> handlerMapping = new HashMap<>();
+	//单一原则设计 不使用map 因为map的key要保存url
+	private List<HandleMapping> handlerMappings = new ArrayList<HandleMapping>();
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -82,14 +88,11 @@ public class MyDispatchServlet extends HttpServlet {
 					String methodName = method.getName();
 					RequestMapping annotation = method.getAnnotation(RequestMapping.class);
 					String url = "/" + baseUrl + "/" + annotation.value();
-					handlerMapping.put(url, method);
+					handlerMappings.add(new HandleMapping(url, method, clazz));
 				} else {
 					continue;
 				}
-
 			}
-
-
 		}
 	}
 
@@ -121,8 +124,6 @@ public class MyDispatchServlet extends HttpServlet {
 				} else {
 					continue;
 				}
-
-
 			}
 		}
 	}
@@ -231,65 +232,92 @@ public class MyDispatchServlet extends HttpServlet {
 
 	private void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
 		String requestURI = req.getRequestURI();
-		if (handlerMapping.containsKey(requestURI)) {
+		HandleMapping handler = getHandler(req);
+		if (handler == null) {
 			resp.getWriter().write("404");
 			return;
 		}
-		Method method = handlerMapping.get(requestURI);
-		String beanName = toLowerFirstCase(method.getDeclaringClass().getSimpleName());
-		//方法的形参列表
-		Parameter[] parameters = method.getParameters();
-		Object[] o = new Object[parameters.length];
+		//method.getAnnotation(RequestParam.class).value()获取不到参数的注解值
+		Method method = handler.getMethod();
+		//已初始化的方法形参列表映射关系
+		Map<String, Integer> paramIndexMapping = handler.getParamIndexMapping();
 		//请求的参数列表
 		Map<String, String[]> reqParameterMap = req.getParameterMap();
-		//使用for循环可以使o对象的顺序得到保证
-		for (int i = 0; i < parameters.length; i++) {
-			if (parameters[i].getType() == HttpServletRequest.class) {
-				o[i] = req;
+		//方法的参数列表 因为paramTypes是形参列表 可以用index获取到对应index的数据类型
+		Class<?>[] paramTypes = handler.getParamTypes();
+		//反射使用的形参列表
+		Object[] objects = new Object[paramIndexMapping.size()];
+		for (Map.Entry<String, String[]> entry : reqParameterMap.entrySet()) {
+			Integer index = paramIndexMapping.get(entry.getKey());
+			//因为req.getParameterMap()是一个String, String[]是String[]因为http支持name=1&name=2的请求方式
+			String value = Arrays.toString(entry.getValue()).
+					replaceAll("\\[|\\]", "").
+					replaceAll("\\s", ",");
+			//因req所有类型都是string method是有不同的数据类型，因此要进行类型转换
+			if (!paramIndexMapping.containsKey(entry.getKey())) {
 				continue;
-			}else if(parameters[i].getType() == HttpServletResponse.class) {
-				o[i] = resp;
-				continue;
-			}else {
-				//http传输过来都是string类型的
-				//parameters[i].getAnnotation(RequestParam.class).value()获取不到参数的注解值
-				//因为参数可能有多个注解所以是二维的
-				Annotation[][] parameterAnnotations = method.getParameterAnnotations();
-				for (int j = 0; j < parameterAnnotations.length; j++) {
-					for (Annotation annotation:parameterAnnotations[j]){
-						if(annotation instanceof RequestParam){
-							RequestParam requestParam = (RequestParam) annotation;
-							if(reqParameterMap.containsKey(requestParam.value())) {
-								//因为req.getParameterMap()是一个String, String[]是String[]因为http支持name=1&name=2的请求方式
-								String value = Arrays.toString(reqParameterMap.get(requestParam.value())).
-										replaceAll("\\[|\\]", "").
-										replaceAll("\\s",",");
-								Object convert = convert(parameters[i].getType(), value);
-								o[i] = convert;
-							}
-						}
-					}
-				}
 			}
+			Object convert = convert(paramTypes[index], value);
+			objects[index] = convert;
 		}
-		method.invoke(ioc.get(beanName), o);
+		//因req和res不在reqParameterMap中
+		if(paramIndexMapping.containsKey(HttpServletRequest.class.getName())){
+			Integer reqIndex = paramIndexMapping.get(HttpServletRequest.class.getName());
+			objects[reqIndex] = req;
+		}
+		if(paramIndexMapping.containsKey(HttpServletResponse.class.getName())){
+			Integer resIndex = paramIndexMapping.get(HttpServletResponse.class.getName());
+			objects[resIndex] = resp;
+		}
+
+		Object invoke = method.invoke(handler.controller, objects);
+		if(invoke==null || invoke instanceof Void){
+			return;
+		}
+		//返回数据（返回modelview处理略）
+		resp.getWriter().write(invoke.toString());
 	}
 
-	private Object convert(Class<?> type,String value){
-		if(String.class == type){
+	private HandleMapping getHandler(HttpServletRequest req) {
+		String contextPath = req.getContextPath();
+		String requestURI = req.getRequestURI();
+		requestURI = requestURI.replaceAll(contextPath, "").replaceAll("/+", "/");
+		for (HandleMapping handleMapping : handlerMappings) {
+			if (handleMapping.url.equals(requestURI)) {
+				return handleMapping;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * converter 转换器
+	 * @param type
+	 * @param value
+	 * @return
+	 */
+	private Object convert(Class<?> type, String value) {
+		if (String.class == type) {
 			return value;
 		}
-		if(Integer.class == type){
+		if (Integer.class == type) {
 			return Integer.valueOf(value);
 		}
+		//可以使用策略模式进行类型的转换
 		return value;
 	}
-	class HandleMapping{
+
+	/**
+	 * 这样设计的原因是method中有很多参数，需要和requestParameters对应起来，进行代理处理
+	 * 减少反射的使用次数
+	 */
+	class HandleMapping {
 		private String url;
 		private Method method;
 		private Object controller;
 		//形参列表 参数名称 参数位置index
-		private Map<String,Integer> paramIndexMapping;
+		private Map<String, Integer> paramIndexMapping;
+		private Class<?>[] paramTypes;
 
 		public HandleMapping(String url, Method method, Object controller) {
 			this.url = url;
@@ -297,16 +325,26 @@ public class MyDispatchServlet extends HttpServlet {
 			this.controller = controller;
 			paramIndexMapping = new HashMap<>();
 			putParamIndexMapping(method);
+			paramTypes = method.getParameterTypes();
+		}
+
+		public Class<?>[] getParamTypes() {
+			return paramTypes;
+		}
+
+		public void setParamTypes(Class<?>[] paramTypes) {
+			this.paramTypes = paramTypes;
 		}
 
 		private void putParamIndexMapping(Method method) {
 			Annotation[][] parameterAnnotations = method.getParameterAnnotations();
+			//因为参数可能有多个注解所以是二维的
 			for (int j = 0; j < parameterAnnotations.length; j++) {
-				for (Annotation annotation:parameterAnnotations[j]){
-					if(annotation instanceof RequestParam){
+				for (Annotation annotation : parameterAnnotations[j]) {
+					if (annotation instanceof RequestParam) {
 						String paramName = ((RequestParam) annotation).value();
-						if(!"".equals(paramName.trim())){
-							paramIndexMapping.put(paramName,j);
+						if (!"".equals(paramName.trim())) {
+							paramIndexMapping.put(paramName, j);
 						}
 					}
 				}
@@ -314,10 +352,42 @@ public class MyDispatchServlet extends HttpServlet {
 			Class<?>[] parameterTypes = method.getParameterTypes();
 			for (int i = 0; i < parameterTypes.length; i++) {
 				Class<?> parameterType = parameterTypes[i];
-				if(parameterType == HttpServletRequest.class || parameterType == HttpServletResponse.class){
-					paramIndexMapping.put(parameterType.getName(),i);
+				if (parameterType == HttpServletRequest.class || parameterType == HttpServletResponse.class) {
+					paramIndexMapping.put(parameterType.getName(), i);
 				}
 			}
+		}
+
+		public String getUrl() {
+			return url;
+		}
+
+		public void setUrl(String url) {
+			this.url = url;
+		}
+
+		public Method getMethod() {
+			return method;
+		}
+
+		public void setMethod(Method method) {
+			this.method = method;
+		}
+
+		public Object getController() {
+			return controller;
+		}
+
+		public void setController(Object controller) {
+			this.controller = controller;
+		}
+
+		public Map<String, Integer> getParamIndexMapping() {
+			return paramIndexMapping;
+		}
+
+		public void setParamIndexMapping(Map<String, Integer> paramIndexMapping) {
+			this.paramIndexMapping = paramIndexMapping;
 		}
 	}
 }

@@ -327,6 +327,9 @@ public class DispatcherServlet extends FrameworkServlet {
 	private ThemeResolver themeResolver;
 
 	/** List of HandlerMappings used by this servlet. */
+	/**
+	 * url和method，形参列表 主要用来对应url和method的关系
+	 */
 	@Nullable
 	private List<HandlerMapping> handlerMappings;
 
