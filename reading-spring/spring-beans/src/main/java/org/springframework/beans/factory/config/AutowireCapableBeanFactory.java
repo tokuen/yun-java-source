@@ -59,6 +59,10 @@ import org.springframework.lang.Nullable;
  * @see org.springframework.beans.factory.config.ConfigurableListableBeanFactory
  * @see org.springframework.context.ApplicationContext#getAutowireCapableBeanFactory()
  */
+
+/**
+ * 对象于对象注解关系
+ */
 public interface AutowireCapableBeanFactory extends BeanFactory {
 
 	/**

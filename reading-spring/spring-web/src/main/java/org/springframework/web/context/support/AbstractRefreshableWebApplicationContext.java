@@ -78,6 +78,7 @@ import org.springframework.web.context.ServletContextAware;
  * @see org.springframework.ui.context.ThemeSource
  * @see XmlWebApplicationContext
  */
+//beanfactory的实现类
 public abstract class AbstractRefreshableWebApplicationContext extends AbstractRefreshableConfigApplicationContext
 		implements ConfigurableWebApplicationContext, ThemeSource {
 

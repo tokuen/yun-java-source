@@ -39,6 +39,10 @@ import org.springframework.lang.Nullable;
  * @since 03.11.2003
  * @see org.springframework.context.support.AbstractApplicationContext#getBeanFactory()
  */
+
+/**
+ * 对象与对象
+ */
 public interface ConfigurableListableBeanFactory
 		extends ListableBeanFactory, AutowireCapableBeanFactory, ConfigurableBeanFactory {
 

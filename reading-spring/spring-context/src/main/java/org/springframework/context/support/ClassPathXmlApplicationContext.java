@@ -49,6 +49,11 @@ import org.springframework.util.Assert;
  * @see #getResourceByPath
  * @see GenericApplicationContext
  */
+
+/**
+ * BeanFactory的一个实现
+ * 使用构造方法传入application.xml文件
+ */
 public class ClassPathXmlApplicationContext extends AbstractXmlApplicationContext {
 
 	@Nullable

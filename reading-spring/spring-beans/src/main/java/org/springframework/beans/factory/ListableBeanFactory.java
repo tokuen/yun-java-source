@@ -55,6 +55,10 @@ import org.springframework.lang.Nullable;
  * @see HierarchicalBeanFactory
  * @see BeanFactoryUtils
  */
+
+/**
+ * 对象与对象平行关系
+ */
 public interface ListableBeanFactory extends BeanFactory {
 
 	/**

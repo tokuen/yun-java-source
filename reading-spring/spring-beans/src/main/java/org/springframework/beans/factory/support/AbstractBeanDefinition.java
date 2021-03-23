@@ -55,6 +55,7 @@ import org.springframework.util.StringUtils;
  * @see ChildBeanDefinition
  */
 @SuppressWarnings("serial")
+//模板方法 抽象工厂 包装器模式
 public abstract class AbstractBeanDefinition extends BeanMetadataAttributeAccessor
 		implements BeanDefinition, Cloneable {
 

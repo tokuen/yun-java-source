@@ -42,6 +42,7 @@ import org.springframework.lang.Nullable;
  * @since January 19, 2001
  * @see ServletContextAware#setServletContext
  */
+//用来处理servlet一些东西 req，resp
 public interface WebApplicationContext extends ApplicationContext {
 
 	/**

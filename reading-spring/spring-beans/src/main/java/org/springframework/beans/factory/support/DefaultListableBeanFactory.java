@@ -113,6 +113,10 @@ import org.springframework.util.StringUtils;
  * @see #getBean
  * @see #resolveDependency
  */
+
+/**
+ * 对象与对象之间的关系
+ */
 @SuppressWarnings("serial")
 public class DefaultListableBeanFactory extends AbstractAutowireCapableBeanFactory
 		implements ConfigurableListableBeanFactory, BeanDefinitionRegistry, Serializable {
