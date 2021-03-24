@@ -7,7 +7,7 @@
 	<distributable/>
 	<servlet>
 		<servlet-name>mvc</servlet-name>
-		<servlet-class>org.springframework.demo.MyDispatchServlet</servlet-class>
+		<servlet-class>org.springframework.mvcdemo.MyDispatchServlet</servlet-class>
 		<init-param>
 			<param-name>contextConfigLocation</param-name>
 			<param-value>application.properties</param-value>

@@ -3,4 +3,4 @@
  *
  * @see org.springframework.test.util
  */
-package org.springframework.demo;
+package org.springframework.mvcdemo;

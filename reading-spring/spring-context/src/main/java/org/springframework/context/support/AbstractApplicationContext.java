@@ -461,6 +461,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see org.springframework.core.io.support.PathMatchingResourcePatternResolver
 	 */
 	protected ResourcePatternResolver getResourcePatternResolver() {
+		//sping资源加载器，其getResource(String location)用于载入资源
 		return new PathMatchingResourcePatternResolver(this);
 	}
 
@@ -571,6 +572,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				registerBeanPostProcessors(beanFactory);
 
 				// Initialize message source for this context.
+				//初始化信息源，和国际化相关
 				initMessageSource();
 
 				// Initialize event multicaster for this context.
@@ -582,6 +584,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				onRefresh();
 
 				// Check for listener beans and register them.
+				//为事件传播器注册事件监听器
 				registerListeners();
 
 				// Instantiate all remaining (non-lazy-init) singletons.
@@ -589,6 +592,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				finishBeanFactoryInitialization(beanFactory);
 
 				// Last step: publish corresponding event.
+				//初始化容器的生命周期事件处理器，并发布容器的生命周期事件
 				finishRefresh();
 			}
 
@@ -599,9 +603,11 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 				}
 
 				// Destroy already created singletons to avoid dangling resources.
+				//销毁所有的bane
 				destroyBeans();
 
 				// Reset 'active' flag.
+				//取消refresh操作，重置容器的同步标识
 				cancelRefresh(ex);
 
 				// Propagate exception to caller.
@@ -611,6 +617,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 			finally {
 				// Reset common introspection caches in Spring's core, since we
 				// might not ever need metadata for singleton beans anymore...
+				//重设公共的缓存
 				resetCommonCaches();
 			}
 		}
@@ -673,7 +680,7 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader
 	 * @see #getBeanFactory()
 	 */
 	protected ConfigurableListableBeanFactory obtainFreshBeanFactory() {
-
+		//使用委派s设计模式，父类定义了抽象的refreshBeanFactory()方法具体实现调用子类的容器的
 		refreshBeanFactory();//AbstractApplicationContext#refreshBeanFactory
 		return getBeanFactory();
 	}

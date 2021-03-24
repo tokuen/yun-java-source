@@ -28,7 +28,7 @@ import org.springframework.util.StringUtils;
  * of specified config locations. Serves as base class for XML-based application
  * context implementations such as {@link ClassPathXmlApplicationContext} and
  * {@link FileSystemXmlApplicationContext}, as well as
- * {@link org.springframework.web.context.support.XmlWebApplicationContext}.
+ * .
  *
  * @author Juergen Hoeller
  * @since 2.5.2
@@ -73,11 +73,13 @@ public abstract class AbstractRefreshableConfigApplicationContext extends Abstra
 	 * Set the config locations for this application context.
 	 * <p>If not set, the implementation may use a default as appropriate.
 	 */
+	//解析bean定义资源文件的路径，处理多个资源文件字符串数组
 	public void setConfigLocations(@Nullable String... locations) {
 		if (locations != null) {
 			Assert.noNullElements(locations, "Config locations must not be null");
 			this.configLocations = new String[locations.length];
 			for (int i = 0; i < locations.length; i++) {
+				//resolvePath为同一个类中将字符串解析为路径的方法
 				this.configLocations[i] = resolvePath(locations[i]).trim();
 			}
 		}
